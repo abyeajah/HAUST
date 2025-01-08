@@ -5,7 +5,6 @@ import random
 from fake_useragent import UserAgent
 from colorama import Fore, init
 import re
-import os
 
 init(autoreset=True)
 
@@ -42,6 +41,9 @@ try:
             elif response.status_code == 429:
                 wait_time = get_time(response.json().get("msg", "")) + random.uniform(1, 3)
                 print(Fore.RED + f"Failed | Status Code: 429 | Reason: {response.json().get('msg')}", end="")
+            elif "nonce too high" in response.text:
+                print(Fore.RED + "Nonce too high. Adjusting...")
+                wait_time = 10
             else:
                 wait_time = 3
                 print(Fore.RED + f"Failed | Status Code: {response.status_code} | Reason: {response.text}", end="")
